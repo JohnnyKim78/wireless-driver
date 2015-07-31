@@ -11,14 +11,13 @@ ccflags-y += -DSTA_FIRMWARE
 ccflags-y += -DSTA_FIRMWARE_1002=\"atmel/wilc1002_firmware.bin\" \
 		-DSTA_FIRMWARE_1003=\"atmel/wilc1003_firmware.bin\"
 
-ccflags-y += -I$(src)/ -DEXPORT_SYMTAB  -D__CHECK_ENDIAN__ -DWILC_ASIC_A0 \
+ccflags-y += -I$(src)/ -D__CHECK_ENDIAN__ -DWILC_ASIC_A0 \
 		-DPLL_WORKAROUND -DCONNECT_DIRECT  -DAGING_ALG \
 		-DWILC_PARSE_SCAN_IN_HOST -DDISABLE_PWRSAVE_AND_SCAN_DURING_IP \
-		-DWILC_PLATFORM=WILC_LINUXKERNEL -Wno-unused-function -DUSE_WIRELESS \
-		-DWILC_DEBUGFS -DSTATIC_MACADDRESS
-
+		-Wno-unused-function -DUSE_WIRELESS -DWILC_DEBUGFS \
+		-DSTATIC_MACADDRESS
 ccflags-y += -DTCP_ACK_FILTER
-ccflags-y += -DTCP_ENHANCEMENTS 
+ccflags-y += -DTCP_ENHANCEMENTS
 
 ccflags-y += -DHAS_SUSPEND_RESUME
 
@@ -32,15 +31,9 @@ ccflags-$(CONFIG_WILC1000_DYNAMICALLY_ALLOCATE_MEMROY) += -DWILC_NORMAL_ALLOC
 
 
 wilc1000-objs := wilc_wfi_netdevice.o wilc_wfi_cfgoperations.o linux_wlan.o linux_mon.o \
-			wilc_memory.o wilc_msgqueue.o wilc_semaphore.o wilc_sleep.o wilc_strutils.o \
-			wilc_thread.o wilc_time.o wilc_timer.o coreconfigurator.o host_interface.o \
+			wilc_memory.o wilc_msgqueue.o wilc_sleep.o wilc_strutils.o \
+			wilc_timer.o coreconfigurator.o host_interface.o \
 			fifo_buffer.o wilc_sdio.o wilc_spi.o wilc_wlan_cfg.o wilc_debugfs.o
 
 wilc1000-$(CONFIG_WILC1000_SDIO) += linux_wlan_sdio.o
 wilc1000-$(CONFIG_WILC1000_SPI) += linux_wlan_spi.o
-
-WILC1000_SRC_VERSION = 12.5
-PATCHLEVEL = 1
-WILC1000_FW_VERSION = 0
-
-ccflags-y += -D__DRIVER_VERSION__=\"$(WILC1000_SRC_VERSION).$(PATCHLEVEL)\"
