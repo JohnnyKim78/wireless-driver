@@ -1186,12 +1186,12 @@ static int linux_wlan_init_test_config(struct net_device *dev, linux_wlan_t* p_n
 		PRINT_D(INIT_DBG,"Null p[ointer\n");
 		goto _fail_;
 	}
-
+#if 0
 	*(int*)c_val = (WILC_Uint32)pstrWFIDrv;
 
 	if (!g_linux_wlan->oup.wlan_cfg_set(1, WID_SET_DRV_HANDLER, c_val, 4, 0,0))
 		goto _fail_;
-	
+#endif
 	/*to tell fw that we are going to use PC test - WILC specific*/
 	c_val[0] = 0;
 	if (!g_linux_wlan->oup.wlan_cfg_set(0, WID_PC_TEST_MODE, c_val, 1, 0,0))
@@ -1426,10 +1426,11 @@ static int linux_wlan_init_test_config(struct net_device *dev, linux_wlan_t* p_n
 	if (!g_linux_wlan->oup.wlan_cfg_set(0, WID_11N_CURRENT_TX_MCS, c_val, 1, 0, 0))
 		goto _fail_;
 
+#if 0
 	c_val[0] = 1; /* Enable N with immediate block ack. */
 	if (!g_linux_wlan->oup.wlan_cfg_set(0, WID_11N_IMMEDIATE_BA_ENABLED, c_val, 1, 1,(WILC_Uint32)pstrWFIDrv))
 		goto _fail_;
-
+#endif
 	return 0;
 
 _fail_:
@@ -2572,39 +2573,40 @@ int mac_ioctl(struct net_device *ndev, struct ifreq *req, int cmd){
 
 			PRINT_INFO(GENERIC_DBG, "%s: Android private cmd \"%s\" on %s\n", __FUNCTION__, buff, req->ifr_name);
 
-			if (strnicmp(buff, "SCAN-ACTIVE", strlen("SCAN-ACTIVE")) == 0) {
-				PRINT_INFO(GENERIC_DBG, "%s, SCAN-ACTIVE command\n", __FUNCTION__);
-			}else if (strnicmp(buff, "SCAN-PASSIVE", strlen("SCAN-PASSIVE")) == 0) {
-				PRINT_INFO(GENERIC_DBG, "%s, SCAN-PASSIVE command\n", __FUNCTION__);
-			}else if (strnicmp(buff, "RXFILTER-START", strlen("RXFILTER-START")) == 0) {
-				PRINT_INFO(GENERIC_DBG, "%s, RXFILTER-START command\n", __FUNCTION__);
-			}else if (strnicmp(buff, "RXFILTER-STOP", strlen("RXFILTER-STOP")) == 0) {
-				PRINT_INFO(GENERIC_DBG, "%s, RXFILTER-STOP command\n", __FUNCTION__);
-			}else if (strnicmp(buff, "RXFILTER-ADD", strlen("RXFILTER-ADD")) == 0) {
-				int filter_num = *(buff + strlen("RXFILTER-ADD") + 1) - '0';
-				PRINT_INFO(GENERIC_DBG, "%s, RXFILTER-ADD command, filter_num=%d\n", __FUNCTION__, filter_num);
-			}else if (strnicmp(buff, "RXFILTER-REMOVE", strlen("RXFILTER-REMOVE")) == 0) {
-				int filter_num = *(buff + strlen("RXFILTER-REMOVE") + 1) - '0';
-				PRINT_INFO(GENERIC_DBG, "%s, RXFILTER-REMOVE command, filter_num=%d\n", __FUNCTION__, filter_num);
-			}else if (strnicmp(buff, "BTCOEXSCAN-START", strlen("BTCOEXSCAN-START")) == 0) {
-				PRINT_INFO(GENERIC_DBG, "%s, BTCOEXSCAN-START command\n", __FUNCTION__);
-			}else if (strnicmp(buff, "BTCOEXSCAN-STOP", strlen("BTCOEXSCAN-STOP")) == 0) {
-				PRINT_INFO(GENERIC_DBG, "%s, BTCOEXSCAN-STOP command\n", __FUNCTION__);
-			}else if (strnicmp(buff, "BTCOEXMODE", strlen("BTCOEXMODE")) == 0) {
-				PRINT_INFO(GENERIC_DBG, "%s, BTCOEXMODE command\n", __FUNCTION__);
-			}else if (strnicmp(buff, "SETBAND", strlen("SETBAND")) == 0) {
-				uint band = *(buff + strlen("SETBAND") + 1) - '0';
-				PRINT_INFO(GENERIC_DBG, "%s, SETBAND command, band=%d\n", __FUNCTION__, band);
-			}else if (strnicmp(buff, "GETBAND", strlen("GETBAND")) == 0) {
-				PRINT_INFO(GENERIC_DBG, "%s, GETBAND command\n", __FUNCTION__);
-			}else if (strnicmp(buff, "COUNTRY", strlen("COUNTRY")) == 0) {
-				char *country_code = buff + strlen("COUNTRY") + 1;
-				PRINT_INFO(GENERIC_DBG, "%s, COUNTRY command, country_code=%s\n", __FUNCTION__, country_code);
-			}else {
-				PRINT_INFO(GENERIC_DBG, "%s, Unknown command\n", __FUNCTION__);
-			}
-		}break;
-	// ]] 2013-06-24
+		if (strncasecmp(buff, "SCAN-ACTIVE", strlen("SCAN-ACTIVE")) == 0) {
+			PRINT_INFO(GENERIC_DBG, "%s, SCAN-ACTIVE command\n", __FUNCTION__);
+		} else if (strncasecmp(buff, "SCAN-PASSIVE", strlen("SCAN-PASSIVE")) == 0)  {
+			PRINT_INFO(GENERIC_DBG, "%s, SCAN-PASSIVE command\n", __FUNCTION__);
+		} else if (strncasecmp(buff, "RXFILTER-START", strlen("RXFILTER-START")) == 0)  {
+			PRINT_INFO(GENERIC_DBG, "%s, RXFILTER-START command\n", __FUNCTION__);
+		} else if (strncasecmp(buff, "RXFILTER-STOP", strlen("RXFILTER-STOP")) == 0)  {
+			PRINT_INFO(GENERIC_DBG, "%s, RXFILTER-STOP command\n", __FUNCTION__);
+		} else if (strncasecmp(buff, "RXFILTER-ADD", strlen("RXFILTER-ADD")) == 0)  {
+			int filter_num = *(buff + strlen("RXFILTER-ADD") + 1) - '0';
+			PRINT_INFO(GENERIC_DBG, "%s, RXFILTER-ADD command, filter_num=%d\n", __FUNCTION__, filter_num);
+		} else if (strncasecmp(buff, "RXFILTER-REMOVE", strlen("RXFILTER-REMOVE")) == 0)  {
+			int filter_num = *(buff + strlen("RXFILTER-REMOVE") + 1) - '0';
+			PRINT_INFO(GENERIC_DBG, "%s, RXFILTER-REMOVE command, filter_num=%d\n", __FUNCTION__, filter_num);
+		} else if (strncasecmp(buff, "BTCOEXSCAN-START", strlen("BTCOEXSCAN-START")) == 0)  {
+			PRINT_INFO(GENERIC_DBG, "%s, BTCOEXSCAN-START command\n", __FUNCTION__);
+		} else if (strncasecmp(buff, "BTCOEXSCAN-STOP", strlen("BTCOEXSCAN-STOP")) == 0)  {
+			PRINT_INFO(GENERIC_DBG, "%s, BTCOEXSCAN-STOP command\n", __FUNCTION__);
+		} else if (strncasecmp(buff, "BTCOEXMODE", strlen("BTCOEXMODE")) == 0)  {
+			PRINT_INFO(GENERIC_DBG, "%s, BTCOEXMODE command\n", __FUNCTION__);
+		} else if (strncasecmp(buff, "SETBAND", strlen("SETBAND")) == 0)  {
+			uint band = *(buff + strlen("SETBAND") + 1) - '0';
+			PRINT_INFO(GENERIC_DBG, "%s, SETBAND command, band=%d\n", __FUNCTION__, band);
+		} else if (strncasecmp(buff, "GETBAND", strlen("GETBAND")) == 0)  {
+			PRINT_INFO(GENERIC_DBG, "%s, GETBAND command\n", __FUNCTION__);
+		} else if (strncasecmp(buff, "COUNTRY", strlen("COUNTRY")) == 0)  {
+			char *country_code = buff + strlen("COUNTRY") + 1;
+			PRINT_INFO(GENERIC_DBG, "%s, COUNTRY command, country_code=%s\n", __FUNCTION__, country_code);
+		} else {
+			PRINT_INFO(GENERIC_DBG, "%s, Unknown command\n", __FUNCTION__);
+		}
+	} break;
+
+	/* ]] 2013-06-24 */
 	case SIOCSIWPRIV:
 		{
 			struct iwreq *wrq = (struct iwreq *) req;	// added by tony
@@ -2628,8 +2630,7 @@ int mac_ioctl(struct net_device *ndev, struct ifreq *req, int cmd){
 						goto done;
 					}
 
-				if(strnicmp(buff,"RSSI",length) == 0) 
-				{
+			if (strncasecmp(buff, "RSSI", length) == 0) {
 
 					#ifdef USE_WIRELESS
 					priv = wiphy_priv(nic->wilc_netdev->ieee80211_ptr->wiphy);
