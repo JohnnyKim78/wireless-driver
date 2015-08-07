@@ -162,7 +162,7 @@ struct WILC_WFI_priv {
     spinlock_t lock;
     struct net_device *dev;
     struct napi_struct napi;
- 	WILC_WFIDrvHandle hWILCWFIDrv;
+	tstrWILC_WFIDrv *hWILCWFIDrv;
 	WILC_WFIDrvHandle hWILCWFIDrv_2;
 	tstrHostIFpmkidAttr pmkid_list;
 	struct WILC_WFI_stats netstats;  
@@ -194,12 +194,12 @@ typedef struct
 }struct_frame_reg;
 
 
-#define NUM_CONCURRENT_IFC 2
+
 typedef struct{
-uint8_t aSrcAddress[ETH_ALEN];
-uint8_t aBSSID[ETH_ALEN];
-uint32_t drvHandler;
-uint8_t u8IfcType;
+	uint8_t aSrcAddress[ETH_ALEN];
+	uint8_t aBSSID[ETH_ALEN];
+	tstrWILC_WFIDrv *drvHandler;
+	uint8_t u8IfcType;
 struct net_device* wilc_netdev;
 }tstrInterfaceInfo;
 typedef struct{

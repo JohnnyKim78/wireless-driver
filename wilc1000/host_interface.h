@@ -66,6 +66,7 @@
 #define BIT1                    ((WILC_Uint32)(1 << 1))
 #define BIT0                    ((WILC_Uint32)(1 << 0))
 
+#define IDLE_MODE		0x00
 #define AP_MODE     	0x01
 #define STATION_MODE	0x02
 #define GO_MODE	0x03
@@ -106,6 +107,9 @@
 #define WILC_SUPP_MCS_SET_SIZE	16
 #define WILC_ADD_STA_LENGTH	40 /* Not including the rates field cause it has variable length*/
 #define SCAN_EVENT_DONE_ABORTED 
+
+#define NUM_CONCURRENT_IFC 2
+
 /*****************************************************************************/
 /* Data Types                                                                */
 /*****************************************************************************/
@@ -528,7 +532,7 @@ typedef struct
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_remove_key(WILC_WFIDrvHandle hWFIDrv,const WILC_Uint8* pu8StaAddress);
+WILC_Sint32 host_int_remove_key(tstrWILC_WFIDrv *hWFIDrv,const WILC_Uint8* pu8StaAddress);
 /**
 *  @brief 		removes WEP key
 *  @details 	valid only in BSS STA mode if External Supplicant support is enabled.
@@ -543,7 +547,7 @@ WILC_Sint32 host_int_remove_key(WILC_WFIDrvHandle hWFIDrv,const WILC_Uint8* pu8S
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_remove_wep_key(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 u8Index);
+WILC_Sint32 host_int_remove_wep_key(tstrWILC_WFIDrv *hWFIDrv,WILC_Uint8 u8Index);
 /**
 *  @brief 		sets WEP deafault key
 *  @details 	Sets the index of the WEP encryption key in use, 
@@ -556,7 +560,7 @@ WILC_Sint32 host_int_remove_wep_key(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 u8Index
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_set_WEPDefaultKeyID(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 u8Index);
+WILC_Sint32 host_int_set_WEPDefaultKeyID(tstrWILC_WFIDrv *hWFIDrv,WILC_Uint8 u8Index);
 
 /**
 *  @brief 		sets WEP deafault key
@@ -577,7 +581,7 @@ WILC_Sint32 host_int_set_WEPDefaultKeyID(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 u8
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_add_wep_key_bss_sta(WILC_WFIDrvHandle hWFIDrv, const WILC_Uint8* pu8WepKey, WILC_Uint8 u8WepKeylen, WILC_Uint8 u8Keyidx);
+WILC_Sint32 host_int_add_wep_key_bss_sta(tstrWILC_WFIDrv *hWFIDrv, const WILC_Uint8* pu8WepKey, WILC_Uint8 u8WepKeylen, WILC_Uint8 u8Keyidx);
 /**
 *  @brief 		host_int_add_wep_key_bss_ap
 *  @details 	valid only in AP mode if External Supplicant support is enabled. 
@@ -592,7 +596,7 @@ WILC_Sint32 host_int_add_wep_key_bss_sta(WILC_WFIDrvHandle hWFIDrv, const WILC_U
 *  @date		28 Feb 2013
 *  @version		1.0
 */
-WILC_Sint32 host_int_add_wep_key_bss_ap(WILC_WFIDrvHandle hWFIDrv, const WILC_Uint8* pu8WepKey, WILC_Uint8 u8WepKeylen, WILC_Uint8 u8Keyidx,WILC_Uint8 u8mode, AUTHTYPE_T tenuAuth_type);
+WILC_Sint32 host_int_add_wep_key_bss_ap(tstrWILC_WFIDrv *hWFIDrv, const WILC_Uint8* pu8WepKey, WILC_Uint8 u8WepKeylen, WILC_Uint8 u8Keyidx,WILC_Uint8 u8mode, AUTHTYPE_T tenuAuth_type);
 
 /**
 *  @brief 		adds ptk Key
@@ -610,7 +614,7 @@ WILC_Sint32 host_int_add_wep_key_bss_ap(WILC_WFIDrvHandle hWFIDrv, const WILC_Ui
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_add_ptk(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8* pu8Ptk,WILC_Uint8 u8PtkKeylen,
+WILC_Sint32 host_int_add_ptk(tstrWILC_WFIDrv *hWFIDrv,WILC_Uint8* pu8Ptk,WILC_Uint8 u8PtkKeylen,
 	const WILC_Uint8* mac_addr,WILC_Uint8* pu8RxMic,WILC_Uint8* pu8TxMic,WILC_Uint8 mode,WILC_Uint8 u8Ciphermode,WILC_Uint8 u8Idx);
 
 /**
@@ -625,7 +629,7 @@ WILC_Sint32 host_int_add_ptk(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8* pu8Ptk,WILC_U
 *  @date		15 April 2013
 *  @version		1.0
 */
-WILC_Sint32 host_int_get_inactive_time(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 * mac,WILC_Uint32* pu32InactiveTime);
+WILC_Sint32 host_int_get_inactive_time(tstrWILC_WFIDrv *hWFIDrv,WILC_Uint8 * mac,WILC_Uint32* pu32InactiveTime);
 
 /**
 *  @brief 		adds Rx GTk Key
@@ -643,7 +647,7 @@ WILC_Sint32 host_int_get_inactive_time(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 * ma
 *  @date		8 March 2012
 *  @version		1.0
 */
-	WILC_Sint32 host_int_add_rx_gtk(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu8RxGtk,WILC_Uint8 u8GtkKeylen,
+	WILC_Sint32 host_int_add_rx_gtk(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint8* pu8RxGtk,WILC_Uint8 u8GtkKeylen,
 			WILC_Uint8 u8KeyIdx,WILC_Uint32 u32KeyRSClen, WILC_Uint8* KeyRSC,
 			WILC_Uint8* pu8RxMic,WILC_Uint8* pu8TxMic,WILC_Uint8 mode,WILC_Uint8 u8Ciphermode);
 
@@ -664,7 +668,7 @@ WILC_Sint32 host_int_get_inactive_time(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 * ma
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_add_tx_gtk(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 u8KeyLen,WILC_Uint8* pu8TxGtk,WILC_Uint8 u8KeyIdx);
+WILC_Sint32 host_int_add_tx_gtk(tstrWILC_WFIDrv *hWFIDrv,WILC_Uint8 u8KeyLen,WILC_Uint8* pu8TxGtk,WILC_Uint8 u8KeyIdx);
 
 /**
 *  @brief 		caches the pmkid 
@@ -687,7 +691,7 @@ WILC_Sint32 host_int_add_tx_gtk(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 u8KeyLen,WI
 *  @version		1.0
 */
 
-WILC_Sint32 host_int_set_pmkid_info(WILC_WFIDrvHandle hWFIDrv, tstrHostIFpmkidAttr* pu8PmkidInfoArray);
+WILC_Sint32 host_int_set_pmkid_info(tstrWILC_WFIDrv *hWFIDrv, tstrHostIFpmkidAttr* pu8PmkidInfoArray);
 /**
 *  @brief 		gets the cached the pmkid info
 *  @details 	valid only in BSS STA mode if External Supplicant	 	
@@ -711,7 +715,7 @@ WILC_Sint32 host_int_set_pmkid_info(WILC_WFIDrvHandle hWFIDrv, tstrHostIFpmkidAt
 *  @version		1.0
 */
 
-WILC_Sint32 host_int_get_pmkid_info(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8* pu8PmkidInfoArray, 
+WILC_Sint32 host_int_get_pmkid_info(tstrWILC_WFIDrv *hWFIDrv,WILC_Uint8* pu8PmkidInfoArray, 
 									   WILC_Uint32 u32PmkidInfoLen);
 
 /**
@@ -728,7 +732,7 @@ WILC_Sint32 host_int_get_pmkid_info(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8* pu8Pmk
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_set_RSNAConfigPSKPassPhrase(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu8PassPhrase, 
+WILC_Sint32 host_int_set_RSNAConfigPSKPassPhrase(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint8* pu8PassPhrase, 
 														  WILC_Uint8 u8Psklength);
 /**
 *  @brief 		gets the pass phrase
@@ -744,7 +748,7 @@ WILC_Sint32 host_int_set_RSNAConfigPSKPassPhrase(WILC_WFIDrvHandle hWFIDrv, WILC
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_get_RSNAConfigPSKPassPhrase(WILC_WFIDrvHandle hWFIDrv,
+WILC_Sint32 host_int_get_RSNAConfigPSKPassPhrase(tstrWILC_WFIDrv *hWFIDrv,
 												WILC_Uint8* pu8PassPhrase, WILC_Uint8 u8Psklength);
 
 /**
@@ -758,7 +762,7 @@ WILC_Sint32 host_int_get_RSNAConfigPSKPassPhrase(WILC_WFIDrvHandle hWFIDrv,
 *  @date		19 April 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_get_MacAddress(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8* pu8MacAddress);
+WILC_Sint32 host_int_get_MacAddress(tstrWILC_WFIDrv *hWFIDrv,WILC_Uint8* pu8MacAddress);
 
 /**
 *  @brief 		sets mac address
@@ -771,7 +775,7 @@ WILC_Sint32 host_int_get_MacAddress(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8* pu8Mac
 *  @date		16 July 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_set_MacAddress(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8* pu8MacAddress);
+WILC_Sint32 host_int_set_MacAddress(tstrWILC_WFIDrv *hWFIDrv,WILC_Uint8* pu8MacAddress);
 
 /**
 *  @brief 		wait until msg q is empty
@@ -816,7 +820,7 @@ WILC_Sint32 host_int_wait_msg_queue_idle(void);
 *  @version		1.0
 */
 #ifndef CONNECT_DIRECT
-WILC_Sint32 host_int_get_site_survey_results(WILC_WFIDrvHandle hWFIDrv, 
+WILC_Sint32 host_int_get_site_survey_results(tstrWILC_WFIDrv *hWFIDrv, 
 											WILC_Uint8 ppu8RcvdSiteSurveyResults[][MAX_SURVEY_RESULT_FRAG_SIZE], 
 											WILC_Uint32 u32MaxSiteSrvyFragLen);
 #endif
@@ -837,7 +841,7 @@ WILC_Sint32 host_int_get_site_survey_results(WILC_WFIDrvHandle hWFIDrv,
 *  @version		1.0
 */
 
-WILC_Sint32 host_int_set_start_scan_req(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 scanSource);
+WILC_Sint32 host_int_set_start_scan_req(tstrWILC_WFIDrv *hWFIDrv,WILC_Uint8 scanSource);
 /**
 *  @brief 		gets scan source of the last scan
 *  @details 	 	
@@ -853,7 +857,7 @@ WILC_Sint32 host_int_set_start_scan_req(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 sca
 *  @date		8 March 2012
 *  @version		1.0
 */
- WILC_Sint32 host_int_get_start_scan_req(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8* pu8ScanSource);
+ WILC_Sint32 host_int_get_start_scan_req(tstrWILC_WFIDrv *hWFIDrv,WILC_Uint8* pu8ScanSource);
 
 /**
 *  @brief 		sets a join request
@@ -867,7 +871,7 @@ WILC_Sint32 host_int_set_start_scan_req(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 sca
 *  @version		1.0
 */
 
-WILC_Sint32 host_int_set_join_req(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu8bssid,
+WILC_Sint32 host_int_set_join_req(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint8* pu8bssid,
 							     WILC_Uint8* pu8ssid, size_t ssidLen,
 							     const WILC_Uint8* pu8IEs, size_t IEsLen,
 							     tWILCpfConnectResult pfConnectResult, void* pvUserArg, 
@@ -887,7 +891,7 @@ WILC_Sint32 host_int_set_join_req(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu8bssi
 *  @version		8.0
 */
 
-WILC_Sint32 host_int_flush_join_req(WILC_WFIDrvHandle hWFIDrv);
+WILC_Sint32 host_int_flush_join_req(tstrWILC_WFIDrv *hWFIDrv);
 
 
 /**
@@ -901,7 +905,7 @@ WILC_Sint32 host_int_flush_join_req(WILC_WFIDrvHandle hWFIDrv);
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_disconnect(WILC_WFIDrvHandle hWFIDrv, WILC_Uint16 u16ReasonCode);
+WILC_Sint32 host_int_disconnect(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint16 u16ReasonCode);
 
 /**
 *  @brief 		disconnects a sta
@@ -914,7 +918,7 @@ WILC_Sint32 host_int_disconnect(WILC_WFIDrvHandle hWFIDrv, WILC_Uint16 u16Reason
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_disconnect_station(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 assoc_id);
+WILC_Sint32 host_int_disconnect_station(tstrWILC_WFIDrv *hWFIDrv,WILC_Uint8 assoc_id);
 /**
 *  @brief 		gets a Association request info
 *  @details 	 	
@@ -941,7 +945,7 @@ WILC_Sint32 host_int_disconnect_station(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 ass
 *  @version		1.0
 */
 
-WILC_Sint32 host_int_get_assoc_req_info(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu8AssocReqInfo, 
+WILC_Sint32 host_int_get_assoc_req_info(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint8* pu8AssocReqInfo, 
 										    WILC_Uint32 u32AssocReqInfoLen);
 /**
 *  @brief 		gets a Association Response info
@@ -955,7 +959,7 @@ WILC_Sint32 host_int_get_assoc_req_info(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* p
 *  @version		1.0
 */
 
-WILC_Sint32 host_int_get_assoc_res_info(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu8AssocRespInfo, 
+WILC_Sint32 host_int_get_assoc_res_info(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint8* pu8AssocRespInfo, 
 										    WILC_Uint32 u32MaxAssocRespInfoLen, WILC_Uint32* pu32RcvdAssocRespInfoLen);
 /**
 *  @brief 		gets a Association Response info
@@ -972,7 +976,7 @@ WILC_Sint32 host_int_get_assoc_res_info(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* p
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_get_rx_power_level(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu8RxPowerLevel, 
+WILC_Sint32 host_int_get_rx_power_level(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint8* pu8RxPowerLevel, 
 										   WILC_Uint32 u32RxPowerLevelLen);
 
 /**
@@ -990,7 +994,7 @@ WILC_Sint32 host_int_get_rx_power_level(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* p
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_set_mac_chnl_num(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 u8ChNum);
+WILC_Sint32 host_int_set_mac_chnl_num(tstrWILC_WFIDrv *hWFIDrv,WILC_Uint8 u8ChNum);
 
 /**
 *  @brief 		gets the current channel index
@@ -1007,7 +1011,7 @@ WILC_Sint32 host_int_set_mac_chnl_num(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 u8ChN
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_get_host_chnl_num(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu8ChNo);
+WILC_Sint32 host_int_get_host_chnl_num(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint8* pu8ChNo);
 /**
 *  @brief 		gets the sta rssi
 *  @details 	gets the currently maintained RSSI value for the station. 
@@ -1021,8 +1025,8 @@ WILC_Sint32 host_int_get_host_chnl_num(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_get_rssi(WILC_WFIDrvHandle hWFIDrv, WILC_Sint8* ps8Rssi);
-WILC_Sint32 host_int_get_link_speed(WILC_WFIDrvHandle hWFIDrv, WILC_Sint8* ps8lnkspd);
+WILC_Sint32 host_int_get_rssi(tstrWILC_WFIDrv *hWFIDrv, WILC_Sint8* ps8Rssi);
+WILC_Sint32 host_int_get_link_speed(tstrWILC_WFIDrv *hWFIDrv, WILC_Sint8* ps8lnkspd);
 /**
 *  @brief 		scans a set of channels
 *  @details 	
@@ -1040,7 +1044,7 @@ WILC_Sint32 host_int_get_link_speed(WILC_WFIDrvHandle hWFIDrv, WILC_Sint8* ps8ln
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_scan(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8 u8ScanSource,
+WILC_Sint32 host_int_scan(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint8 u8ScanSource,
 					     WILC_Uint8 u8ScanType, WILC_Uint8* pu8ChnlFreqList,
 					     WILC_Uint8 u8ChnlListLen, const WILC_Uint8* pu8IEs,
 					     size_t IEsLen, tWILCpfScanResult ScanResult,
@@ -1056,7 +1060,7 @@ WILC_Sint32 host_int_scan(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8 u8ScanSource,
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 hif_set_cfg(WILC_WFIDrvHandle hWFIDrv, tstrCfgParamVal * pstrCfgParamVal);
+WILC_Sint32 hif_set_cfg(tstrWILC_WFIDrv *hWFIDrv, tstrCfgParamVal * pstrCfgParamVal);
 
 /**
 *  @brief 		gets configuration wids values
@@ -1070,7 +1074,7 @@ WILC_Sint32 hif_set_cfg(WILC_WFIDrvHandle hWFIDrv, tstrCfgParamVal * pstrCfgPara
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 hif_get_cfg(WILC_WFIDrvHandle hWFIDrv,WILC_Uint16 u16WID,WILC_Uint16* pu16WID_Value);
+WILC_Sint32 hif_get_cfg(tstrWILC_WFIDrv *hWFIDrv,WILC_Uint16 u16WID,WILC_Uint16* pu16WID_Value);
 /*****************************************************************************/
 /*							Notification Functions							 */
 /*****************************************************************************/
@@ -1117,7 +1121,7 @@ void host_int_send_network_info_to_host
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_init(WILC_WFIDrvHandle* phWFIDrv);
+WILC_Sint32 host_int_init(tstrWILC_WFIDrv **phWFIDrv);
 
 /**
 *  @brief 		host interface initialization function
@@ -1128,11 +1132,11 @@ WILC_Sint32 host_int_init(WILC_WFIDrvHandle* phWFIDrv);
 *  @date		8 March 2012
 *  @version		1.0
 */
-WILC_Sint32 host_int_deinit(WILC_WFIDrvHandle hWFIDrv);
+WILC_Sint32 host_int_deinit(tstrWILC_WFIDrv *hWFIDrv);
 
 
 /*!
- *  @fn		WILC_Sint32 host_int_add_beacon(WILC_WFIDrvHandle hWFIDrv,WILC_Uint8 u8Index)
+ *  @fn		WILC_Sint32 host_int_add_beacon(tstrWILC_WFIDrv *hWFIDrv,WILC_Uint8 u8Index)
  *  @brief		Sends a beacon to the firmware to be transmitted over the air
  *  @details	
  *  @param[in,out]	hWFIDrv		handle to the wifi driver
@@ -1153,14 +1157,14 @@ WILC_Sint32 host_int_deinit(WILC_WFIDrvHandle hWFIDrv);
  *  @version		1.0 Description
 
  */
-WILC_Sint32 host_int_add_beacon(WILC_WFIDrvHandle hWFIDrv, WILC_Uint32 u32Interval,
+WILC_Sint32 host_int_add_beacon(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint32 u32Interval,
 									 WILC_Uint32 u32DTIMPeriod,
 									 WILC_Uint32 u32HeadLen, WILC_Uint8* pu8Head,
 									 WILC_Uint32 u32TailLen, WILC_Uint8* pu8tail);
 
 
 /*!
- *  @fn		WILC_Sint32 host_int_del_beacon(WILC_WFIDrvHandle hWFIDrv)
+ *  @fn		WILC_Sint32 host_int_del_beacon(tstrWILC_WFIDrv *hWFIDrv)
  *  @brief		Removes the beacon and stops trawilctting it over the air
  *  @details	
  *  @param[in,out]	hWFIDrv		handle to the wifi driver
@@ -1171,10 +1175,10 @@ WILC_Sint32 host_int_add_beacon(WILC_WFIDrvHandle hWFIDrv, WILC_Uint32 u32Interv
  *  @date		10 Julys 2012
  *  @version		1.0 Description
  */
-WILC_Sint32 host_int_del_beacon(WILC_WFIDrvHandle hWFIDrv);
+WILC_Sint32 host_int_del_beacon(tstrWILC_WFIDrv *hWFIDrv);
 
 /*!
- *  @fn		WILC_Sint32 host_int_add_station(WILC_WFIDrvHandle hWFIDrv, tstrWILC_AddStaParam strStaParams)
+ *  @fn		WILC_Sint32 host_int_add_station(tstrWILC_WFIDrv *hWFIDrv, tstrWILC_AddStaParam strStaParams)
  *  @brief		Notifies the firmware with a new associated stations
  *  @details	
  *  @param[in,out]	hWFIDrv		handle to the wifi driver
@@ -1186,10 +1190,10 @@ WILC_Sint32 host_int_del_beacon(WILC_WFIDrvHandle hWFIDrv);
  *  @date		12 July 2012
  *  @version		1.0 Description
  */
-WILC_Sint32 host_int_add_station(WILC_WFIDrvHandle hWFIDrv, tstrWILC_AddStaParam* pstrStaParams);
+WILC_Sint32 host_int_add_station(tstrWILC_WFIDrv *hWFIDrv, tstrWILC_AddStaParam* pstrStaParams);
 
 /*!
- *  @fn		WILC_Sint32 host_int_del_allstation(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu8MacAddr)
+ *  @fn		WILC_Sint32 host_int_del_allstation(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint8* pu8MacAddr)
  *  @brief		Deauthenticates clients when group is terminating
  *  @details	
  *  @param[in,out]	hWFIDrv		handle to the wifi driver
@@ -1201,10 +1205,10 @@ WILC_Sint32 host_int_add_station(WILC_WFIDrvHandle hWFIDrv, tstrWILC_AddStaParam
  *  @date		09 April 2014
  *  @version		1.0 Description
  */
-WILC_Sint32 host_int_del_allstation(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8 pu8MacAddr[][ETH_ALEN]);
+WILC_Sint32 host_int_del_allstation(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint8 pu8MacAddr[][ETH_ALEN]);
 
 /*!
- *  @fn		WILC_Sint32 host_int_del_station(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu8MacAddr)
+ *  @fn		WILC_Sint32 host_int_del_station(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint8* pu8MacAddr)
  *  @brief		Notifies the firmware with a new deleted station
  *  @details	
  *  @param[in,out]	hWFIDrv		handle to the wifi driver
@@ -1216,10 +1220,10 @@ WILC_Sint32 host_int_del_allstation(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8 pu8Mac
  *  @date		15 July 2012
  *  @version		1.0 Description
  */
-WILC_Sint32 host_int_del_station(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu8MacAddr);
+WILC_Sint32 host_int_del_station(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint8* pu8MacAddr);
 
 /*!
- *  @fn		WILC_Sint32 host_int_edit_station(WILC_WFIDrvHandle hWFIDrv, tstrWILC_AddStaParam strStaParams)
+ *  @fn		WILC_Sint32 host_int_edit_station(tstrWILC_WFIDrv *hWFIDrv, tstrWILC_AddStaParam strStaParams)
  *  @brief		Notifies the firmware with new parameters of an already associated station
  *  @details	
  *  @param[in,out]	hWFIDrv		handle to the wifi driver
@@ -1231,10 +1235,10 @@ WILC_Sint32 host_int_del_station(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu8MacAd
  *  @date		15 July 2012
  *  @version		1.0 Description
  */
-WILC_Sint32 host_int_edit_station(WILC_WFIDrvHandle hWFIDrv, tstrWILC_AddStaParam* pstrStaParams);
+WILC_Sint32 host_int_edit_station(tstrWILC_WFIDrv *hWFIDrv, tstrWILC_AddStaParam* pstrStaParams);
 
 /*!
- *  @fn		WILC_Sint32 host_int_set_power_mgmt(WILC_WFIDrvHandle hWFIDrv, WILC_Bool bIsEnabled, WILC_Uint32 u32Timeout)
+ *  @fn		WILC_Sint32 host_int_set_power_mgmt(tstrWILC_WFIDrv *hWFIDrv, WILC_Bool bIsEnabled, WILC_Uint32 u32Timeout)
  *  @brief		Set the power management mode to enabled or disabled
  *  @details	
  *  @param[in,out]	hWFIDrv		handle to the wifi driver
@@ -1248,7 +1252,7 @@ WILC_Sint32 host_int_edit_station(WILC_WFIDrvHandle hWFIDrv, tstrWILC_AddStaPara
  *  @date		24 November 2012
  *  @version		1.0 Description
  */
-WILC_Sint32 host_int_set_power_mgmt(WILC_WFIDrvHandle hWFIDrv, WILC_Bool bIsEnabled, WILC_Uint32 u32Timeout);
+WILC_Sint32 host_int_set_power_mgmt(tstrWILC_WFIDrv *hWFIDrv, WILC_Bool bIsEnabled, WILC_Uint32 u32Timeout);
 /*  @param[in,out]	hWFIDrv		handle to the wifi driver
  *  @param[in]	bIsEnabled	TRUE if enabled, FALSE otherwise
  *  @param[in]	u8count		count of mac address entries in the filter table
@@ -1260,7 +1264,7 @@ WILC_Sint32 host_int_set_power_mgmt(WILC_WFIDrvHandle hWFIDrv, WILC_Bool bIsEnab
  *  @date		24 November 2012
  *  @version		1.0 Description
  */
-WILC_Sint32 host_int_setup_multicast_filter(WILC_WFIDrvHandle hWFIDrv, WILC_Bool bIsEnabled, WILC_Uint32 u32count);
+WILC_Sint32 host_int_setup_multicast_filter(tstrWILC_WFIDrv *hWFIDrv, WILC_Bool bIsEnabled, WILC_Uint32 u32count);
 /**
 *  @brief           host_int_setup_ipaddress
 *  @details 	   set IP address on firmware
@@ -1270,7 +1274,7 @@ WILC_Sint32 host_int_setup_multicast_filter(WILC_WFIDrvHandle hWFIDrv, WILC_Bool
 *  @date	
 *  @version	1.0
 */
-WILC_Sint32 host_int_setup_ipaddress(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu8IPAddr, WILC_Uint8 idx);
+WILC_Sint32 host_int_setup_ipaddress(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint8* pu8IPAddr, WILC_Uint8 idx);
 
 
 /**
@@ -1282,7 +1286,7 @@ WILC_Sint32 host_int_setup_ipaddress(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu8I
 *  @date	
 *  @version	1.0
 */
-WILC_Sint32 host_int_delBASession(WILC_WFIDrvHandle hWFIDrv, char* pBSSID,char TID);
+WILC_Sint32 host_int_delBASession(tstrWILC_WFIDrv *hWFIDrv, char* pBSSID,char TID);
 
 /**
 *  @brief           host_int_delBASession
@@ -1293,7 +1297,7 @@ WILC_Sint32 host_int_delBASession(WILC_WFIDrvHandle hWFIDrv, char* pBSSID,char T
 *  @date	
 *  @version	1.0
 */
-WILC_Sint32 host_int_del_All_Rx_BASession(WILC_WFIDrvHandle hWFIDrv, char* pBSSID,char TID);
+WILC_Sint32 host_int_del_All_Rx_BASession(tstrWILC_WFIDrv *hWFIDrv, char* pBSSID,char TID);
 
 
 /**
@@ -1305,7 +1309,7 @@ WILC_Sint32 host_int_del_All_Rx_BASession(WILC_WFIDrvHandle hWFIDrv, char* pBSSI
 *  @date	
 *  @version	1.0
 */
-WILC_Sint32 host_int_get_ipaddress(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu8IPAddr, WILC_Uint8 idx);
+WILC_Sint32 host_int_get_ipaddress(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint8* pu8IPAddr, WILC_Uint8 idx);
 
 #ifdef WILC_P2P
 /**
@@ -1317,7 +1321,7 @@ WILC_Sint32 host_int_get_ipaddress(WILC_WFIDrvHandle hWFIDrv, WILC_Uint8* pu8IPA
 *  @date	
 *  @version	1.0
 */
-WILC_Sint32 host_int_remain_on_channel(WILC_WFIDrvHandle hWFIDrv, WILC_Uint32 u32SessionID, WILC_Uint32 u32duration,WILC_Uint16 chan,tWILCpfRemainOnChanExpired RemainOnChanExpired, tWILCpfRemainOnChanReady RemainOnChanReady,void* pvUserArg);
+WILC_Sint32 host_int_remain_on_channel(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint32 u32SessionID, WILC_Uint32 u32duration,WILC_Uint16 chan,tWILCpfRemainOnChanExpired RemainOnChanExpired, tWILCpfRemainOnChanReady RemainOnChanReady,void* pvUserArg);
 
 /**
 *  @brief           	host_int_ListenStateExpired
@@ -1333,7 +1337,7 @@ WILC_Sint32 host_int_remain_on_channel(WILC_WFIDrvHandle hWFIDrv, WILC_Uint32 u3
 *  @date	
 *  @version		1.0
 */
-WILC_Sint32 host_int_ListenStateExpired(WILC_WFIDrvHandle hWFIDrv, WILC_Uint32 u32SessionID);
+WILC_Sint32 host_int_ListenStateExpired(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint32 u32SessionID);
 
 /**
 *  @brief           host_int_frame_register
@@ -1344,7 +1348,7 @@ WILC_Sint32 host_int_ListenStateExpired(WILC_WFIDrvHandle hWFIDrv, WILC_Uint32 u
 *  @date	
 *  @version	1.0
 */
-WILC_Sint32 host_int_frame_register(WILC_WFIDrvHandle hWFIDrv, WILC_Uint16 u16FrameType,WILC_Bool bReg);
+WILC_Sint32 host_int_frame_register(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint16 u16FrameType,WILC_Bool bReg);
 #endif
 /**
 *  @brief           host_int_set_wfi_drv_handler
@@ -1355,18 +1359,18 @@ WILC_Sint32 host_int_frame_register(WILC_WFIDrvHandle hWFIDrv, WILC_Uint16 u16Fr
 *  @date	
 *  @version	1.0
 */
-WILC_Sint32 host_int_set_wfi_drv_handler(WILC_Uint32 u32address,WILC_Uint8 u8MacIndex);
-WILC_Sint32 host_int_set_operation_mode(WILC_WFIDrvHandle hWFIDrv, WILC_Uint32 u32mode);
+WILC_Sint32 host_int_set_wfi_drv_handler(tstrWILC_WFIDrv *u32address,WILC_Uint8 u8MacIndex);
+WILC_Sint32 host_int_set_operation_mode(tstrWILC_WFIDrv *hWFIDrv, WILC_Uint32 u32mode);
 
-static WILC_Sint32 Handle_ScanDone(void* drvHandler,tenuScanEvent enuEvent);
+static WILC_Sint32 Handle_ScanDone(tstrWILC_WFIDrv *drvHandler,tenuScanEvent enuEvent);
 
-static int host_int_addBASession(WILC_WFIDrvHandle hWFIDrv, char* pBSSID,char TID,short int BufferSize,
+static int host_int_addBASession(tstrWILC_WFIDrv *hWFIDrv, char* pBSSID,char TID,short int BufferSize,
 	short int SessionTimeout,void * drvHandler);
 
 
 void host_int_freeJoinParams(void* pJoinParams);
 
-WILC_Sint32 host_int_get_statistics(WILC_WFIDrvHandle hWFIDrv, tstrStatistics* pstrStatistics);
+WILC_Sint32 host_int_get_statistics(tstrWILC_WFIDrv *hWFIDrv, tstrStatistics* pstrStatistics);
 extern int linux_wlan_get_num_conn_ifcs(void);
 
 /*****************************************************************************/

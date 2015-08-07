@@ -745,9 +745,13 @@ static void CfgConnectResult(tenuConnDisconnEvent enuConnDisconnEvent,
 		{
 			pstrDisconnectNotifInfo->u16reason=1;
 		}
+#if LINUX_VERSION_CODE > KERNEL_VERSION(4,1,0)
+		cfg80211_disconnected(dev, pstrDisconnectNotifInfo->u16reason, pstrDisconnectNotifInfo->ie,
+				      pstrDisconnectNotifInfo->ie_len, true, GFP_KERNEL);
+#else
 		cfg80211_disconnected(dev, pstrDisconnectNotifInfo->u16reason, pstrDisconnectNotifInfo->ie,
 						      pstrDisconnectNotifInfo->ie_len, GFP_KERNEL);
-
+#endif
 	}
 
 }

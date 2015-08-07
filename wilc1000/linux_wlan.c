@@ -347,13 +347,13 @@ static int dev_state_ev_handler(struct notifier_block *this, unsigned long event
 		
 
 			if(bEnablePS	== WILC_TRUE)
-				host_int_set_power_mgmt((WILC_WFIDrvHandle)pstrWFIDrv, 1, 0);
+				host_int_set_power_mgmt(pstrWFIDrv, 1, 0);
 
             PRINT_D(GENERIC_DBG, "[%s] Up IP\n", dev_iface->ifa_label);
 
 			pIP_Add_buff = (char *) (&(dev_iface->ifa_address));
 			PRINT_D(GENERIC_DBG,"IP add=%d:%d:%d:%d \n",pIP_Add_buff[0],pIP_Add_buff[1],pIP_Add_buff[2],pIP_Add_buff[3]);
-			s32status = host_int_setup_ipaddress((WILC_WFIDrvHandle)pstrWFIDrv, pIP_Add_buff, nic->u8IfIdx);
+			s32status = host_int_setup_ipaddress(pstrWFIDrv, pIP_Add_buff, nic->u8IfIdx);
 
 			break;
 
@@ -368,7 +368,7 @@ static int dev_state_ev_handler(struct notifier_block *this, unsigned long event
 			}
 
 			if(memcmp(dev_iface->ifa_label , wlan_dev_name, 5) == 0)
-		   		host_int_set_power_mgmt((WILC_WFIDrvHandle)pstrWFIDrv, 0, 0);
+		   		host_int_set_power_mgmt(pstrWFIDrv, 0, 0);
 				
 			resolve_disconnect_aberration(pstrWFIDrv);
 			
@@ -378,7 +378,7 @@ static int dev_state_ev_handler(struct notifier_block *this, unsigned long event
 			pIP_Add_buff = null_ip;
 			PRINT_D(GENERIC_DBG, "IP add=%d:%d:%d:%d \n",pIP_Add_buff[0],pIP_Add_buff[1],pIP_Add_buff[2],pIP_Add_buff[3]);
 			
-			s32status = host_int_setup_ipaddress((WILC_WFIDrvHandle)pstrWFIDrv, pIP_Add_buff, nic->u8IfIdx);
+			s32status = host_int_setup_ipaddress(pstrWFIDrv, pIP_Add_buff, nic->u8IfIdx);
 
 			break;
 				
@@ -1186,12 +1186,12 @@ static int linux_wlan_init_test_config(struct net_device *dev, linux_wlan_t* p_n
 		PRINT_D(INIT_DBG,"Null p[ointer\n");
 		goto _fail_;
 	}
-#if 0
-	*(int*)c_val = (WILC_Uint32)pstrWFIDrv;
+
+	*(int *)c_val = (u32)1;
 
 	if (!g_linux_wlan->oup.wlan_cfg_set(1, WID_SET_DRV_HANDLER, c_val, 4, 0,0))
 		goto _fail_;
-#endif
+
 	/*to tell fw that we are going to use PC test - WILC specific*/
 	c_val[0] = 0;
 	if (!g_linux_wlan->oup.wlan_cfg_set(0, WID_PC_TEST_MODE, c_val, 1, 0,0))
@@ -1426,11 +1426,10 @@ static int linux_wlan_init_test_config(struct net_device *dev, linux_wlan_t* p_n
 	if (!g_linux_wlan->oup.wlan_cfg_set(0, WID_11N_CURRENT_TX_MCS, c_val, 1, 0, 0))
 		goto _fail_;
 
-#if 0
 	c_val[0] = 1; /* Enable N with immediate block ack. */
-	if (!g_linux_wlan->oup.wlan_cfg_set(0, WID_11N_IMMEDIATE_BA_ENABLED, c_val, 1, 1,(WILC_Uint32)pstrWFIDrv))
+	if (!g_linux_wlan->oup.wlan_cfg_set(0, WID_11N_IMMEDIATE_BA_ENABLED, c_val, 1, 1, 1))
 		goto _fail_;
-#endif
+
 	return 0;
 
 _fail_:
@@ -2164,7 +2163,7 @@ int mac_open(struct net_device *ndev){
 		if(ndev == g_linux_wlan->strInterfaceInfo[i].wilc_netdev)
 		{
 			memcpy(g_linux_wlan->strInterfaceInfo[i].aSrcAddress, mac_add, ETH_ALEN);
-			g_linux_wlan->strInterfaceInfo[i].drvHandler = (WILC_Uint32)priv->hWILCWFIDrv;
+			g_linux_wlan->strInterfaceInfo[i].drvHandler = priv->hWILCWFIDrv;
 			if(nic->iftype == AP_MODE)
 				host_int_set_wfi_drv_handler(priv->hWILCWFIDrv,0);
 			else if(linux_wlan_get_num_conn_ifcs() == 0)
@@ -2277,7 +2276,7 @@ static void wilc_set_multicast_list(struct net_device *dev)
     {
     	PRINT_D(INIT_DBG,"Disable multicast filter, retrive all multicast packets\n");
         // get all multicast packets
-	 host_int_setup_multicast_filter((WILC_WFIDrvHandle)pstrWFIDrv, WILC_FALSE, 0);
+	 host_int_setup_multicast_filter(pstrWFIDrv, WILC_FALSE, 0);
         return;
     }
 	
@@ -2285,7 +2284,7 @@ static void wilc_set_multicast_list(struct net_device *dev)
     if ((dev->mc.count) == 0) 
     {
     	 PRINT_D(INIT_DBG,"Enable multicast filter, retrive directed packets only.\n");
-        host_int_setup_multicast_filter((WILC_WFIDrvHandle)pstrWFIDrv, WILC_TRUE, 0);
+        host_int_setup_multicast_filter(pstrWFIDrv, WILC_TRUE, 0);
         return;
     }
 	
@@ -2298,7 +2297,7 @@ static void wilc_set_multicast_list(struct net_device *dev)
 	 i++;
     }
 	
-	host_int_setup_multicast_filter((WILC_WFIDrvHandle)pstrWFIDrv, WILC_TRUE, (dev->mc.count));
+	host_int_setup_multicast_filter(pstrWFIDrv, WILC_TRUE, (dev->mc.count));
 
 	return;
 	
@@ -2332,7 +2331,7 @@ static void wilc_set_multicast_list(struct net_device *dev)
     if ( (dev->flags & IFF_ALLMULTI) ||( dev->mc_count > WILC_MULTICAST_TABLE_SIZE) )
     {
     	 PRINT_D(INIT_DBG,"Disable multicast filter, retrive all multicast packets\n");
-        host_int_setup_multicast_filter((WILC_WFIDrvHandle)gWFiDrvHandle, WILC_FALSE, 0);
+        host_int_setup_multicast_filter(gWFiDrvHandle, WILC_FALSE, 0);
         return;
     }
 	
@@ -2340,7 +2339,7 @@ static void wilc_set_multicast_list(struct net_device *dev)
     if (dev->mc_count == 0) 
     {
     	 PRINT_D(INIT_DBG,"Enable multicast filter, retrive directed packets only.\n");
-        host_int_setup_multicast_filter((WILC_WFIDrvHandle)gWFiDrvHandle, WILC_TRUE, 0);
+        host_int_setup_multicast_filter(gWFiDrvHandle, WILC_TRUE, 0);
         return;
     }
 	
@@ -2352,7 +2351,7 @@ static void wilc_set_multicast_list(struct net_device *dev)
 	 i++;
     }
         
-    host_int_setup_multicast_filter((WILC_WFIDrvHandle)gWFiDrvHandle, WILC_TRUE, (dev->mc_count));
+    host_int_setup_multicast_filter(gWFiDrvHandle, WILC_TRUE, (dev->mc_count));
 	
 }
 #endif
